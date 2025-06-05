@@ -4,6 +4,9 @@ import AccountManagement from '../views/AccountManagement.vue'
 import MaterialManagement from '../views/MaterialManagement.vue'
 import PublishCenter from '../views/PublishCenter.vue'
 import About from '../views/About.vue'
+import Joblist from '../views/Joblist.vue'
+import Ai from '../views/Ai.vue'
+import Listen from '../views/Listen.vue'
 
 const routes = [
   {
@@ -30,6 +33,21 @@ const routes = [
     path: '/about',
     name: 'About',
     component: About
+  },
+  {
+    path: '/joblist',
+    name: 'joblist',
+    component: Joblist
+  },
+  {
+    path: '/ai',
+    name: 'ai',
+    component: Ai
+  },
+  {
+    path: '/listen',
+    name: 'listen',
+    component: Listen
   }
 ]
 

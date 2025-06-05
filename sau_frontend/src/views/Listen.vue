@@ -98,6 +98,48 @@
         </el-col>
       </el-row>
       
+      <!-- 快捷操作区域 -->
+      <!-- <div class="quick-actions">
+        <h2>快捷操作</h2>
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-card class="action-card" @click="navigateTo('/account-management')">
+              <div class="action-icon">
+                <el-icon><UserFilled /></el-icon>
+              </div>
+              <div class="action-title">账号管理</div>
+              <div class="action-desc">管理所有平台账号</div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card class="action-card">
+              <div class="action-icon">
+                <el-icon><Upload /></el-icon>
+              </div>
+              <div class="action-title">内容上传</div>
+              <div class="action-desc">上传视频和图文内容</div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card class="action-card">
+              <div class="action-icon">
+                <el-icon><Timer /></el-icon>
+              </div>
+              <div class="action-title">定时发布</div>
+              <div class="action-desc">设置内容发布时间</div>
+            </el-card>
+          </el-col>
+          <el-col :span="6">
+            <el-card class="action-card">
+              <div class="action-icon">
+                <el-icon><DataAnalysis /></el-icon>
+              </div>
+              <div class="action-title">数据分析</div>
+              <div class="action-desc">查看内容数据分析</div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div> -->
       
       <!-- 最近任务列表 -->
       <div class="recent-tasks">
@@ -120,7 +162,6 @@
           </el-table-column>
           <el-table-column prop="account" label="账号" width="150" />
           <el-table-column prop="createTime" label="创建时间" width="180" />
-          <el-table-column prop="createTime" label="计划执行时间" width="180" />
           <el-table-column prop="status" label="状态" width="120">
             <template #default="scope">
               <el-tag
