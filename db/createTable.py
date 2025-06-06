@@ -34,6 +34,22 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS file_records (
 )
 ''')
 
+# 创建任务表
+cursor.execute('''CREATE TABLE IF NOT EXISTS file_records(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type INTEGER NOT NULL,
+    accountPath TEXT NOT NULL,
+    accountName TEXT NOT NULL,
+    status INTEGER DEFAULT 0,
+    filePath TEXT,
+    title TEXT,
+    tags TEXT,
+    publishTime datetime,
+    createTime datetime,
+    scheduleTime datetime
+)
+''')
+
 
 # 提交更改
 conn.commit()

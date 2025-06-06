@@ -445,6 +445,48 @@ def postVideoBatch():
             "data": None
         }), 200
 
+@app.route("/getAccountsStatistics",methods=['GET'])
+def getAccountsStatistics():
+    with sqlite3.connect(Path(BASE_DIR / "db" / "database.db")) as conn:
+        cursor = conn.cursor()
+
+        # 按status
+        cursor.execute('''SELECT status,COUNT(*) as count FROM user_info group by status''')
+        rows = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]  # 获取字段名列表
+        status_list = [{columns[i]: value for i, value in enumerate(row)} for row in rows]
+        
+
+        # 按type
+        cursor.execute('''SELECT type,COUNT(*) as count FROM user_info group by type''')
+        rows = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]  # 获取字段名列表
+        paltform_list = [{columns[i]: value for i, value in enumerate(row)} for row in rows]
+
+        # job
+        
+        cursor.execute('''SELECT status,COUNT(*) as count FROM joblist group by status''')
+        rows = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]  # 获取字段名列表
+        job = [{columns[i]: value for i, value in enumerate(row)} for row in rows]
+
+        # joblist
+        cursor.execute('''SELECT * FROM joblist order by id DESC limit 10''')
+        rows = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]  # 获取字段名列表
+        job_list = [{columns[i]: value for i, value in enumerate(row)} for row in rows]
+
+        returndata = {'status_list':  status_list, 'paltform_list': paltform_list,'job': job, 'job_list': job_list}
+
+        cursor.close()
+        # 返回响应给客户端
+        return jsonify(
+            {
+                "code": 200,
+                "msg": None,
+                "data": returndata
+            }), 200
+
 # 包装函数：在线程中运行异步函数
 def run_async_function(type,id,status_queue):
     match type:
@@ -468,7 +510,6 @@ def run_async_function(type,id,status_queue):
             asyncio.set_event_loop(loop)
             loop.run_until_complete(get_ks_cookie(id,status_queue))
             loop.close()
-
 # SSE 流生成器函数
 def sse_stream(status_queue):
     while True:
@@ -480,4 +521,5 @@ def sse_stream(status_queue):
             time.sleep(0.1)
 
 if __name__ == '__main__':
+    # getAccountsStatistics()
     app.run(host='0.0.0.0' ,port=5409)
