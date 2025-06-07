@@ -35,7 +35,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS file_records (
 ''')
 
 # 创建任务表
-cursor.execute('''CREATE TABLE IF NOT EXISTS file_records(
+cursor.execute('''CREATE TABLE IF NOT EXISTS joblist(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     type INTEGER NOT NULL,
     accountPath TEXT NOT NULL,
@@ -50,7 +50,18 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS file_records(
 )
 ''')
 
-
+# 创建任务表
+cursor.execute('''CREATE TABLE IF NOT EXISTS persion(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    persion INTEGER NOT NULL,
+    sort TEXT NOT NULL,
+    title TEXT NOT NULL,
+    script INTEGER DEFAULT 0,
+    task_id TEXT,
+    file_path TEXT,
+    status TEXT
+)
+''')
 # 提交更改
 conn.commit()
 print("✅ 表创建成功")
