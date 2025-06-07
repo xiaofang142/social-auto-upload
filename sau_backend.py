@@ -12,6 +12,11 @@ from flask import Flask, request, jsonify, Response, render_template, send_from_
 from conf import BASE_DIR
 from myUtils.login import get_tencent_cookie, douyin_cookie_gen, get_ks_cookie, xiaohongshu_cookie_gen
 from myUtils.postVideo import post_video_tencent, post_video_DouYin, post_video_ks, post_video_xhs
+import http.client
+import json
+
+API_KEY = 'sk-nciFMuKSriJ0xEJEF29e2a93B13f41A2Ab90F9De9106D1F2'
+
 
 active_queues = {}
 app = Flask(__name__)
@@ -520,6 +525,73 @@ def sse_stream(status_queue):
             # 避免 CPU 占满
             time.sleep(0.1)
 
+def buildVideoScript(keyword):
+    content = '请帮我生成一个视频脚本，内容是关于' +  keyword + '的视频，我将用于使用可灵生成视频，只返回脚本内容不要返回其他的无关内容'
+    conn = http.client.HTTPSConnection("api.gpt.ge")
+    payload = json.dumps({
+        "model": "deepseek-chat",
+        "messages": [
+            {
+                "role": "user",
+                "content": content
+            }
+        ],
+        "max_tokens": 1688,
+        "temperature": 0.5,
+        "stream": False
+    })
+    headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    'Content-Type': 'application/json'
+    }
+    conn.request("POST", "/v1/chat/completions", payload, headers)
+    res = conn.getresponse()
+    data = res.read()
+    data = json.loads(data)
+    conn.close()
+    res =  data["choices"][0]["message"]["content"]
+    print(res)
+
+def buildVideo():
+
+    # script = buildVideoScript(keyword)
+    script = '''
+**[开场画面]**  
+（背景：古代战场与书卷交织的动态画面，激昂的背景音乐）  
+**旁白**：  
+“他是南宋豪放派词人的代表，也是沙场点兵的铁血将领。一生以收复中原为志，却壮志难酬。今天，让我们一起走进辛弃疾的传奇人生。”
+'''
+    conn = http.client.HTTPSConnection("api.gpt.ge")
+    payload = json.dumps({
+        "model_name": "kling-v1-6",
+        "prompt": script,
+        "mode": "std",
+        "aspect_ratio": "1:1",
+        "duration": "5"
+    })
+    headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    'Content-Type': 'application/json'
+    }
+    conn.request("POST", "/kling/v1/videos/text2video", payload, headers)
+    res = conn.getresponse()
+    data = res.read()
+    print(data.decode("utf-8"))
+
+def kelingQuery(task_id):
+    url = '/kling/v1/videos/text2video/' + task_id
+    conn = http.client.HTTPSConnection("api.gpt.ge")
+    payload = ''
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        'Content-Type': 'application/json'
+    }
+    conn.request("GET", url, payload, headers)
+    res = conn.getresponse()
+    data = res.read()
+    print(data.decode("utf-8"))
+
 if __name__ == '__main__':
+    # kelingQuery('760140321703067658')
     # getAccountsStatistics()
-    app.run(host='0.0.0.0' ,port=5409)
+    # app.run(host='0.0.0.0' ,port=5409)
